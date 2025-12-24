@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
         const buffer = Buffer.from(bytes);
         const result = await new Promise<CloudinaryUploadResponse>((resolve, reject) => {
             const upload_stream = cloudinary.uploader.upload_stream(
-                {folder: 'video-uploads'},
+                {folder: 'image-uploads'},
                 (error, result) => {
                     if(error) {
                         reject(error);
