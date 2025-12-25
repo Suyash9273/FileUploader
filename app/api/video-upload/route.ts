@@ -2,6 +2,7 @@ import {NextResponse, NextRequest} from 'next/server';
 import {v2 as cloudinary} from 'cloudinary';
 import {auth} from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
+export const runtime = 'nodejs';
 
 cloudinary.config({ 
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
@@ -36,8 +37,8 @@ export async function POST(request: NextRequest) {
         const description = formData.get('description') as string|null;
         const originalSize = formData.get('originalSize') as string|null;
 
-        if(!file) { 
-            return NextResponse.json({error: 'No file provided'}, {status:400});
+        if(!file || !title || !description || !originalSize) { 
+            return NextResponse.json({error: 'No file, title, description, or originalSize provided'}, {status:400});
         }
 
         const bytes = await file.arrayBuffer();
@@ -65,12 +66,13 @@ export async function POST(request: NextRequest) {
         })
 
         const video = await prisma.video.create({
+            data:{
             title,
             description,
             publicId: result.public_id,
-            originalSize: originalSize ? parseInt(originalSize) : null,
-            bytes: String(result.bytes),
-            duration: result.duration || 0
+            originalSize: originalSize,
+            compressedSize: String(result.bytes),
+            duration: result.duration || 0}
         })
 
         return NextResponse.json(video, {status: 201});

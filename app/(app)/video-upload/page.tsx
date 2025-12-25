@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Commet } from 'react-loading-indicators';
 
 function VideoUpload() {
     const [file, setFile] = useState<File | null>(null);
@@ -57,29 +58,33 @@ function VideoUpload() {
                 <div>
                     <label>Description</label>
                     <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="input-base"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="input-base"
                     />
                 </div>
 
                 <div>
                     <label>Video File</label>
-                    <input 
-                    type="file"
-                    accept="video/*"
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
-                    className="input-base"
+                    <input
+                        type="file"
+                        accept="video/*"
+                        onChange={(e) => setFile(e.target.files?.[0] || null)}
+                        className="input-base"
                     />
                 </div>
 
-                <button 
-                type="submit"
-                className="btn btn-primary"
-                disabled={isUploading}
-                >
-                    {isUploading? "Uploading...": "Upload"}
-                </button>
+                {isUploading ? (
+                    <Commet color="#0077ff" size="medium" text="" textColor="" />
+                ) : (
+                    <button
+                        type="submit"
+                        className="btn btn-primary"
+                    >
+                        Upload
+                    </button>
+                )}
+
             </form>
         </div>
     )
